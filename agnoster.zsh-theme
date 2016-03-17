@@ -37,6 +37,18 @@ CROSS="\u2718"
 LIGHTNING="\u26a1"
 GEAR="\u2699"
 
+
+# Return a shortened pwd path
+short_pwd() {
+  local current_dir="${PWD/#${HOME}/~}"
+  local return_dir='~'
+
+  if [[ ${current_dir} != '~' ]]; then
+   return_dir="${${${${(@j:/:M)${(@s:/:)current_dir}##.#?}:h}%/}//\%/%%}/${${current_dir:t}//\%/%%}"
+  fi
+  print ${return_dir}
+}
+
 # Begin a segment
 # Takes two arguments, background and foreground. Both can be omitted,
 # rendering default background/foreground.
@@ -103,7 +115,7 @@ prompt_git() {
 
 # Dir: current working directory
 prompt_dir() {
-  prompt_segment blue $PRIMARY_FG ' %~ '
+  prompt_segment blue $PRIMARY_FG " $(short_pwd) "
 }
 
 # Status:
